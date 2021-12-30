@@ -216,10 +216,10 @@ class BottomAppBar extends StatefulWidget {
     this.clipBehavior = Clip.none,
     this.notchMargin = 4.0,
     this.child,
-  }) : assert(elevation == null || elevation >= 0.0),
-       assert(notchMargin != null),
-       assert(clipBehavior != null),
-       super(key: key);
+  })  : assert(elevation == null || elevation >= 0.0),
+        assert(notchMargin != null),
+        assert(clipBehavior != null),
+        super(key: key);
 
   /// The widget below this widget in the tree.
   ///
@@ -285,16 +285,19 @@ class _BottomAppBarState extends State<BottomAppBar> {
     final BottomAppBarTheme babTheme = BottomAppBarTheme.of(context);
     final NotchedShape? notchedShape = widget.shape ?? babTheme.shape;
     final CustomClipper<Path> clipper = notchedShape != null
-      ? _BottomAppBarClipper(
-          geometry: geometryListenable,
-          shape: notchedShape,
-          materialKey: materialKey,
-          notchMargin: widget.notchMargin,
-        )
-      : const ShapeBorderClipper(shape: RoundedRectangleBorder());
-    final double elevation = widget.elevation ?? babTheme.elevation ?? _defaultElevation;
-    final Color color = widget.color ?? babTheme.color ?? Theme.of(context).bottomAppBarColor;
-    final Color effectiveColor = ElevationOverlay.applyOverlay(context, color, elevation);
+        ? _BottomAppBarClipper(
+            geometry: geometryListenable,
+            shape: notchedShape,
+            materialKey: materialKey,
+            notchMargin: widget.notchMargin,
+          )
+        : const ShapeBorderClipper(shape: RoundedRectangleBorder());
+    final double elevation =
+        widget.elevation ?? babTheme.elevation ?? _defaultElevation;
+    final Color color =
+        widget.color ?? babTheme.color ?? Theme.of(context).bottomAppBarColor;
+    final Color effectiveColor =
+        ElevationOverlay.applyOverlay(context, color, elevation);
     return PhysicalShape(
       clipper: clipper,
       elevation: elevation,
@@ -303,9 +306,7 @@ class _BottomAppBarState extends State<BottomAppBar> {
       child: Material(
         key: materialKey,
         type: MaterialType.transparency,
-        child: widget.child == null
-          ? null
-          : SafeArea(child: widget.child!),
+        child: widget.child == null ? null : SafeArea(child: widget.child!),
       ),
     );
   }
@@ -317,10 +318,10 @@ class _BottomAppBarClipper extends CustomClipper<Path> {
     required this.shape,
     required this.materialKey,
     required this.notchMargin,
-  }) : assert(geometry != null),
-       assert(shape != null),
-       assert(notchMargin != null),
-       super(reclip: geometry);
+  })  : assert(geometry != null),
+        assert(shape != null),
+        assert(notchMargin != null),
+        super(reclip: geometry);
 
   final ValueListenable<ScaffoldGeometry> geometry;
   final NotchedShape shape;
@@ -329,7 +330,8 @@ class _BottomAppBarClipper extends CustomClipper<Path> {
 
   // Returns the top of the BottomAppBar in global coordinates.
   double get bottomNavigationBarTop {
-    final RenderBox? box = materialKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? box =
+        materialKey.currentContext?.findRenderObject() as RenderBox?;
     return box?.localToGlobal(Offset.zero).dy ?? 0;
   }
 
@@ -338,14 +340,15 @@ class _BottomAppBarClipper extends CustomClipper<Path> {
     // button is the floating action button's bounding rectangle in the
     // coordinate system whose origin is at the appBar's top left corner,
     // or null if there is no floating action button.
-    final Rect? button = geometry.value.floatingActionButtonArea?.translate(0.0, bottomNavigationBarTop * -1.0);
+    final Rect? button = geometry.value.floatingActionButtonArea
+        ?.translate(0.0, bottomNavigationBarTop * -1.0);
     return shape.getOuterPath(Offset.zero & size, button?.inflate(notchMargin));
   }
 
   @override
   bool shouldReclip(_BottomAppBarClipper oldClipper) {
-    return oldClipper.geometry != geometry
-        || oldClipper.shape != shape
-        || oldClipper.notchMargin != notchMargin;
+    return oldClipper.geometry != geometry ||
+        oldClipper.shape != shape ||
+        oldClipper.notchMargin != notchMargin;
   }
 }
